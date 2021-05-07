@@ -1,5 +1,5 @@
 from django.db import models
-from  .user import User
+from .user import User
 
 class Notification(models.Model):
     id = models.AutoField(primary_key=True)
@@ -10,4 +10,3 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.id
-        
