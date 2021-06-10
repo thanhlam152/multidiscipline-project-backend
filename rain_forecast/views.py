@@ -1,4 +1,8 @@
-from rest_framework import viewsets
+from django.contrib.auth.hashers import check_password
+from rest_framework import viewsets, status
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from .models.user import User
 from .models.notification import Notification
@@ -45,3 +49,21 @@ class DoorView(viewsets.ModelViewSet):
     queryset = Door.objects.all()
     serializer_class = DoorSerializer
 
+
+class LoginView(viewsets.ViewSet):
+    def create(self, request):
+        print(request.data)
+        user = get_object_or_404(User, email=request.data.get("email"))
+        if check_password(request.data.get("password"), user.password):
+            serializer = UserSerializer(user)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+
+        return Response(
+            {
+                "message": "Not found"
+            },
+            status=status.status.HTTP_404_NOT_FOUND
+        )

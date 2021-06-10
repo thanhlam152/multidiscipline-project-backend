@@ -13,6 +13,7 @@ router.register(r'sensors', forecast_views.SensorView)
 router.register(r'magneticSwitchs', forecast_views.MagneticSwitchView)
 router.register(r'records', forecast_views.RecordView)
 router.register(r'doors', forecast_views.DoorView)
+router.register(r'auth/login', forecast_views.LoginView, basename='login')
 
 
 urlpatterns = [

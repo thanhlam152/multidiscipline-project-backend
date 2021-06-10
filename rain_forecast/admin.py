@@ -26,7 +26,7 @@ admin.site.register(Notification, NotificationAdmin)
 
 
 class DeviceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'location')
+    list_display = ('id', 'topic_name', 'aio_key', 'type')
 
 
 admin.site.register(Device, DeviceAdmin)
@@ -58,4 +58,3 @@ class DoorAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Door, DoorAdmin)
-
