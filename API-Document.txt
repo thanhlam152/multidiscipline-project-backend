@@ -1,0 +1,100 @@
+--- ĐĂNG NHẬP
+POST: api/auth/login/
+body: 
+{
+    "email": string,
+    "password": string
+}
+
+=> return 
+{
+    "id": int,
+    "password": string,
+    "name": string,
+    "email": string,
+    "phone_number": string
+}
+
+
+--- ĐĂNG KÝ
+POST: api/users/
+body:
+{
+    "password": string,
+    "name": string,
+    "email": string,
+    "phone_number": string
+}
+
+=> return
+{
+    "id": int,
+    "password": string,
+    "name": string,
+    "email": string,
+    "phone_number": string
+}
+
+
+
+--- THAY ĐỒI NGƯỜI DÙNG
+PUT: api/users/{id}/
+body:
+{
+    "password": string,
+    "name": string,
+    "email": string,
+    "phone_number": string
+}
+
+=> return
+{
+    "id": int,
+    "password": string,
+    "name": string,
+    "email": string,
+    "phone_number": string
+}
+
+
+--- LƯU THIẾT BỊ
+POST: api/devices/
+body:
+{
+    "topic_name": string,
+    "aio_key": string,
+    "type": string
+}
+
+=> return
+{
+    "id": int,
+    "topic_name": string,
+    "aio_key": string,
+    "type": string
+}
+
+
+-- THAY ĐỔI THIẾT BỊ
+PUT: api/devices/{id}/
+body:
+{
+    "topic_name": string,
+    "aio_key": string,
+    "type": string
+}
+
+=> return
+{
+    "id": int,
+    "topic_name": string,
+    "aio_key": string,
+    "type": string
+}
+
+
+-- XÓA THIẾT BỊ
+DELETE: api/devices/{id}/
+body: None
+
+=> return: None
