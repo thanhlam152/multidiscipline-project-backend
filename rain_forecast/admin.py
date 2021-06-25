@@ -19,7 +19,7 @@ admin.site.register(User, UserAdmin)
 
 
 class NotificationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'content', 'is_read', 'time', 'to_user')
+    list_display = ('id', 'title', 'content', 'is_read', 'time', 'to_user')
 
 
 admin.site.register(Notification, NotificationAdmin)
