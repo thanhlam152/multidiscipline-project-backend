@@ -24,6 +24,20 @@ class NotificationView(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
 
+    def list(self, request):
+        userId = self.request.query_params.get('user')
+
+        notificationList = Notification.objects.all()
+        if userId:
+            user = get_object_or_404(User, id=userId)
+            notificationList = notificationList.filter(to_user=user)
+
+        serializer = NotificationSerializer(notificationList, many=True)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
 
 class DeviceView(viewsets.ModelViewSet):
     queryset = Device.objects.all()
