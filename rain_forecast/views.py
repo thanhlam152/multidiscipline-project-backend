@@ -65,5 +65,5 @@ class LoginView(viewsets.ViewSet):
             {
                 "message": "Not found"
             },
-            status=status.status.HTTP_404_NOT_FOUND
+            status=status.HTTP_404_NOT_FOUND
         )
