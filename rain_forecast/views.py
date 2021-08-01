@@ -43,6 +43,20 @@ class DeviceView(viewsets.ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
 
+    def list(self, request):
+        deviceList = Device.objects.all()
+
+        userId = self.request.query_params.get('user')
+        if userId is not None:
+            user = get_object_or_404(User, id=userId)
+            deviceList = deviceList.filter(user=user)
+
+        serializer = DeviceSerializer(deviceList, many=True)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
 
 class SensorView(viewsets.ModelViewSet):
     queryset = Sensor.objects.all()
@@ -66,7 +80,6 @@ class DoorView(viewsets.ModelViewSet):
 
 class LoginView(viewsets.ViewSet):
     def create(self, request):
-        print(request.data)
         user = get_object_or_404(User, email=request.data.get("email"))
         if check_password(request.data.get("password"), user.password):
             serializer = UserSerializer(user)
