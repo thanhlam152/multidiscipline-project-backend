@@ -49,6 +49,8 @@ You can view the file `backend/settings.py` to understand what these fields used
 (venv)$ python3 adaFruitConnection.py
 ```
 
+on a different terminal tab.
+
 # Important note
 To send to the correct machine, be sure to swap the Expo token in adaFruitConnection.py and notification.py according 
 to what the terminal print when open notification tab of the mobile app.  
