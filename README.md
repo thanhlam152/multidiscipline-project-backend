@@ -43,3 +43,12 @@ You can view the file `backend/settings.py` to understand what these fields used
 ```sh
 (venv)$ python3 manage.py runserver
 ```
+
+## Run notification service
+```sh
+(venv)$ python3 adaFruitConnection.py
+```
+
+# Important note
+To send to the correct machine, be sure to swap the Expo token in adaFruitConnection.py and notification.py according 
+to what the terminal print when open notification tab of the mobile app.  
