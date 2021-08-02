@@ -4,7 +4,6 @@ import os
 import sys
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 dotenv_file = os.path.join(BASE_DIR, '.env')
@@ -15,7 +14,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = os.environ['DEBUG'] == 'True'
 
-ALLOWED_HOSTS = list(os.environ['ALLOWED_HOSTS'].split(','))
+ALLOWED_HOSTS = list(os.environ['ALLOWED_HOSTS'].split(',')) + ['192.168.1.9']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -68,8 +67,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Mobile App',
+        'USER': 'postgres',
+        'PASSWORD': 'dunghoinua',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
