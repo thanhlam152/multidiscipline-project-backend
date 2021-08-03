@@ -46,7 +46,7 @@ You can view the file `backend/settings.py` to understand what these fields used
 
 ## Run notification service
 ```sh
-(venv)$ python3 adaFruitConnection.py
+(venv)$ python3 adafruitConnection.py
 ```
 
 on a different terminal tab.
