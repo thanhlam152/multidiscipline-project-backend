@@ -19,6 +19,7 @@ devicesInfo = Device.objects.filter(user=userList[len(userList)-1]).exclude(type
 switchInfo = Device.objects.filter(user=userList[len(userList)-1], type='Magnetic switch')
 
 
+push_token = ['ExponentPushToken[uPVhNdBgorULEX__74YHS2]']
 def close_door_window(switchesInfo):
     for i in range(len(switchInfo)):
         response = requests.post('https://io.adafruit.com/api/v2/' + switchInfo[i].topic_name + '/data',
@@ -70,7 +71,8 @@ while 1:
             notification_title = "Warning!"
             notification_content = "It is going to rain soon\nClosed all the doors and windows."
             close_door_window(switchInfo)
-            send_push_message('ExponentPushToken[uPVhNdBgorULEX__74YHS2]', notification_title, notification_content)
+            for x in push_token:
+                send_push_message(x, notification_title, notification_content)
 
     tz = pytz.timezone('Asia/Ho_Chi_Minh')
     now = datetime.datetime.now(tz)
@@ -79,7 +81,8 @@ while 1:
         notification_title = "Good morning!"
         notification_content = "Current temparature is : " + latest_temp + "\nCurrent humidity is: " + latest_humid + \
                                "\nChange of raining is " + rainPercentage + "%"
-        send_push_message('ExponentPushToken[uPVhNdBgorULEX__74YHS2]', notification_title, notification_content)
+        for x in push_token:
+            send_push_message(x, notification_title, notification_content)
 
     time.sleep(40)
 
