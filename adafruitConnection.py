@@ -11,20 +11,21 @@ setup()
 
 
 from rain_forecast.models import User, Device
-ADAFRUIT_IO_KEY = 'aio_wsVz16Oeun8i1wwDGe78fY6bhZEl'
 
+isPredictFirstTime = False
 userList = User.objects.all()
 # At the moment, only the lastest user may have this service
 devicesInfo = Device.objects.filter(user=userList[len(userList)-1]).exclude(type='Magnetic switch')
 switchInfo = Device.objects.filter(user=userList[len(userList)-1], type='Magnetic switch')
 
 
-push_token = ['ExponentPushToken[uPVhNdBgorULEX__74YHS2]']
+push_token = ['ExponentPushToken[sWXDcpADJVP1DfakCpETKu]']
 def close_door_window(switchesInfo):
     for i in range(len(switchInfo)):
+        print("Comming")
         response = requests.post('https://io.adafruit.com/api/v2/' + switchInfo[i].topic_name + '/data',
                                 headers={
-                                    "X-AIO-Key": ADAFRUIT_IO_KEY
+                                    "X-AIO-Key": switchesInfo[i].aio_key
                                 },
                                 data={
                                     "value":json.dumps(
@@ -37,6 +38,7 @@ def close_door_window(switchesInfo):
                                     )
                                 }
                                 )
+        print(response.json())
 
 
 while 1:
@@ -44,7 +46,7 @@ while 1:
     switches_stage = []
     for i in range(len(devicesInfo)):
         response = requests.get('https://io.adafruit.com/api/v2/' + devicesInfo[i].topic_name + '/data/last',
-                                headers={"X-AIO-Key": ADAFRUIT_IO_KEY})
+                                headers={"X-AIO-Key": devicesInfo[i].aio_key})
         info = json.loads(response.json()['value'])
         if info['name'] == 'RAIN':
             latest_rain = float(info['data'])
@@ -54,25 +56,36 @@ while 1:
 
     for i in range(len(switchInfo)):
         response = requests.get('https://io.adafruit.com/api/v2/' + switchInfo[i].topic_name + '/data/last',
-                                headers={"X-AIO-Key": ADAFRUIT_IO_KEY})
+                                headers={"X-AIO-Key": switchInfo[i].aio_key})
         info = json.loads(response.json()['value'])
         switches_stage.append(int(info['data']))
 
+    print(switches_stage)
     model_file = 'model.sav'
     loaded_model = pickle.load(open(model_file, 'rb'))
+    if (latest_humid<70):
+        latest_humid = 70
+    if (latest_temp < 29):
+        latest_temp = 29
     inputData = {'TempAvgF': latest_temp, 'HumidityAvgPercent': latest_humid, 'SeaLevelPressureAvgInches': latest_rain}
     inputDf = pd.DataFrame(inputData, index=[0])
 
     rainPercentage = loaded_model.predict(inputDf)[0]
     notification_title = notification_content = ""
 
-    if rainPercentage > 0.8:
-        if 1 in switches_stage:
-            notification_title = "Warning!"
-            notification_content = "It is going to rain soon\nClosed all the doors and windows."
-            close_door_window(switchInfo)
-            for x in push_token:
-                send_push_message(x, notification_title, notification_content)
+    print(rainPercentage)
+
+    if rainPercentage > 0.5:
+        if 0 in switches_stage:
+            print(isPredictFirstTime)
+            if not isPredictFirstTime:
+                notification_title = "Warning!"
+                notification_content = str(round(rainPercentage*100))+ "% it is going to rain soon!\nClosed all the doors and " \
+                                                                "windows. "
+                close_door_window(switchInfo)
+                for x in push_token:
+                    send_push_message(x, notification_title, notification_content)
+                isPredictFirstTime = True
 
     tz = pytz.timezone('Asia/Ho_Chi_Minh')
     now = datetime.datetime.now(tz)
@@ -84,6 +97,6 @@ while 1:
         for x in push_token:
             send_push_message(x, notification_title, notification_content)
 
-    time.sleep(40)
+    time.sleep(20)
 
 
