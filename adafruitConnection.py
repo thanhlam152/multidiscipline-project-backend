@@ -79,7 +79,7 @@ while 1:
 
     if now.hour == 6:
         notification_title = "Good morning!"
-        notification_content = "Current temparature is : " + latest_temp + "\nCurrent humidity is: " + latest_humid + \
+        notification_content = "Current temparature is : " + str(latest_temp) + "\nCurrent humidity is: " + str(latest_humid) + \
                                "\nChange of raining is " + rainPercentage + "%"
         for x in push_token:
             send_push_message(x, notification_title, notification_content)

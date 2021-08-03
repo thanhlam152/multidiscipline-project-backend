@@ -201,7 +201,6 @@ torchvision==0.8.2
 tornado==6.1
 tqdm==4.60.0
 traitlets==5.0.5
-turicreate==6.4.1
 Twisted==21.2.0
 typing-extensions==3.7.4.3
 update==0.0.1
