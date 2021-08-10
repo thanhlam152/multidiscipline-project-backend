@@ -23,4 +23,4 @@ def send_push_message(token, title, message, extra=None):
     newNotificaion.save()
 
 
-# send_push_message('ExponentPushToken[sWXDcpADJVP1DfakCpETKu]', 'test', 'test')
+# send_push_message('ExponentPushToken[psuQ8ZGEELL-Twb17-6-SD]', 'test', 'test')

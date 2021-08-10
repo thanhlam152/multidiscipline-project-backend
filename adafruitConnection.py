@@ -12,31 +12,21 @@ setup()
 
 from rain_forecast.models import User, Device
 
-isPredictFirstTime = False
+isPredictFirstTime = 0
 userList = User.objects.all()
 # At the moment, only the lastest user may have this service
 devicesInfo = Device.objects.filter(user=userList[len(userList)-1]).exclude(type='Magnetic switch')
 switchInfo = Device.objects.filter(user=userList[len(userList)-1], type='Magnetic switch')
 
 
-push_token = ['ExponentPushToken[sWXDcpADJVP1DfakCpETKu]']
+push_token = ['ExponentPushToken[psuQ8ZGEELL-Twb17-6-SD]']
 def close_door_window(switchesInfo):
     for i in range(len(switchInfo)):
-        print("Comming")
         response = requests.post('https://io.adafruit.com/api/v2/' + switchInfo[i].topic_name + '/data',
                                 headers={
                                     "X-AIO-Key": switchesInfo[i].aio_key
                                 },
-                                data={
-                                    "value":json.dumps(
-                                        {
-                                            "id": "8",
-                                            "name": "MAGNETIC",
-                                            "data": 1,
-                                            "unit": "",
-                                        }
-                                    )
-                                }
+                                data={"value":"{\"id\":\"11\",\"name\":\"RELAY\",\"data\":\"1\",\"unit\":\"\"}"}
                                 )
         print(response.json())
 
@@ -60,32 +50,31 @@ while 1:
         info = json.loads(response.json()['value'])
         switches_stage.append(int(info['data']))
 
-    print(switches_stage)
     model_file = 'model.sav'
     loaded_model = pickle.load(open(model_file, 'rb'))
-    if (latest_humid<70):
-        latest_humid = 70
-    if (latest_temp < 29):
-        latest_temp = 29
-    inputData = {'TempAvgF': latest_temp, 'HumidityAvgPercent': latest_humid, 'SeaLevelPressureAvgInches': latest_rain}
-    inputDf = pd.DataFrame(inputData, index=[0])
 
-    rainPercentage = loaded_model.predict(inputDf)[0]
-    notification_title = notification_content = ""
+    if latest_rain < 10:
+        rainPercentage = 0.1
+    else:
+        if (latest_humid<70):
+            latest_humid = 70
+        inputData = {'TempAvgF': latest_temp, 'HumidityAvgPercent': latest_humid, 'SeaLevelPressureAvgInches': 100}
+        inputDf = pd.DataFrame(inputData, index=[0])
 
+        rainPercentage = loaded_model.predict(inputDf)[0]
+        notification_title = notification_content = ""
     print(rainPercentage)
-
     if rainPercentage > 0.5:
         if 0 in switches_stage:
             print(isPredictFirstTime)
-            if not isPredictFirstTime:
+            if  isPredictFirstTime <2:
                 notification_title = "Warning!"
                 notification_content = str(round(rainPercentage*100))+ "% it is going to rain soon!\nClosed all the doors and " \
                                                                 "windows. "
                 close_door_window(switchInfo)
                 for x in push_token:
                     send_push_message(x, notification_title, notification_content)
-                isPredictFirstTime = True
+                isPredictFirstTime +=1
 
     tz = pytz.timezone('Asia/Ho_Chi_Minh')
     now = datetime.datetime.now(tz)
@@ -97,6 +86,6 @@ while 1:
         for x in push_token:
             send_push_message(x, notification_title, notification_content)
 
-    time.sleep(20)
+    time.sleep(1)
 
 
