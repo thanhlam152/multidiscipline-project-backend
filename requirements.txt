@@ -22,7 +22,7 @@ chardet==4.0.0
 commonmark==0.9.1
 constantly==15.1.0
 coremltools==4.0b3
-cryptography==3.3.1
+cryptography==3.3.2
 cssselect==1.1.0
 cycler==0.10.0
 deap==1.2.2
